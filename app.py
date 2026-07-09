@@ -6,8 +6,14 @@ import requests
 app = Flask(__name__)
 
 # Your bot API
-BOT_API_BASE_URL = "https://your-bot-project-name.up.railway.app"
-BOT_API_PORT = "30151"
+BOT_API_BASE_URL = os.getenv("BOT_API_BASE_URL", "https://your-bot-project-name.up.railway.app").rstrip("/")
+BOT_API_PORT = os.getenv("BOT_API_PORT", "30151").strip()
+
+
+def build_bot_api_url(path: str) -> str:
+    if BOT_API_PORT in ("", "443", "80"):
+        return f"{BOT_API_BASE_URL}{path}"
+    return f"{BOT_API_BASE_URL}:{BOT_API_PORT}{path}"
 
 # ---------- LOGIN FIRST ----------
 @app.route('/')
@@ -53,7 +59,7 @@ def send_emote():
         for i, uid in enumerate(uids):
             params[f'uid{i+1}'] = uid
 
-        api_url = f"{BOT_API_BASE_URL}:{BOT_API_PORT}/join"
+        api_url = build_bot_api_url("/join")
         response = requests.get(api_url, params=params, timeout=30)
         response.raise_for_status()
 
