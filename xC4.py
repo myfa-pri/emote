@@ -207,20 +207,14 @@ async def GenJoinGlobaL(owner , code , K, V):
     }
     return await GeneRaTePk((await CrEaTe_ProTo(fields)).hex() , '0515' , K , V)
 
-async def FS(K,V,region):
+async def FS(K,V):
     fields = {
             1: 9,
             2: {
                 1: 13256361202
             }
             }
-    if region.lower() == "ind":
-        packet = '0514'
-    elif region.lower() == "bd":
-        packet = "0519"
-    else:
-        packet = "0515"
-    return await GeneRaTePk((await CrEaTe_ProTo(fields)).hex() , packet , K , V)
+    return await GeneRaTePk((await CrEaTe_ProTo(fields)).hex() , '0515' , K , V)
 
 
 
@@ -251,7 +245,7 @@ async def Emote_k(TarGeT , idT, K, V,region):
 
 async def GeTSQDaTa(D):
     uid = D['5']['data']['1']['data']
-    chat_code = D["5"]["data"]["17"]["data"]
+    chat_code = D["5"]["data"]["14"]["data"]
     squad_code = D["5"]["data"]["31"]["data"]
 
 
