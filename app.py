@@ -8,6 +8,7 @@ app = Flask(__name__)
 # Your bot API
 BOT_API_BASE_URL = os.getenv("BOT_API_BASE_URL", "https://your-bot-project-name.up.railway.app").rstrip("/")
 BOT_API_PORT = os.getenv("BOT_API_PORT", "30151").strip()
+BOT_API_JOIN_PATH = f"/{os.getenv('BOT_API_JOIN_PATH', 'join').strip().strip('/')}"
 
 
 def build_bot_api_url(path: str) -> str:
@@ -59,7 +60,7 @@ def send_emote():
         for i, uid in enumerate(uids):
             params[f'uid{i+1}'] = uid
 
-        api_url = build_bot_api_url("/join")
+        api_url = build_bot_api_url(BOT_API_JOIN_PATH)
         response = requests.get(api_url, params=params, timeout=30)
         response.raise_for_status()
 
