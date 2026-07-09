@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Password Display — YouTube & Telegram</title>
+  <style>
+    :root{
+      --bg:#f6f7fb;        /* page background */
+      --text:#0f172a;      /* primary text */
+      --muted:#475569;     /* secondary text */
+      --card:#ffffff;      /* card bg */
+      --border:#e5e7eb;    /* card border */
+      --accent:#2563eb;    /* primary accent */
+      --accent-weak:#eff4ff; /* light accent bg */
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+      background:var(--bg); color:var(--text);
+    }
+    .wrap{width:100%;max-width:840px;padding:32px}
+    header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px}
+    h1{font-size:24px;line-height:1.2;margin:0 0 6px}
+    p.lead{margin:0;color:var(--muted);font-size:14px}
+    .cards{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .card{
+      background:var(--card);padding:20px;border-radius:16px;border:1px solid var(--border);
+      box-shadow:0 6px 20px rgba(2,6,23,.04);
+      min-height:116px;display:flex;flex-direction:column;justify-content:space-between
+    }
+    .label{font-size:12px;letter-spacing:.02em;color:var(--muted);margin-bottom:10px;text-transform:uppercase}
+    .pw-row{display:flex;gap:10px;align-items:center}
+    .pw{
+      flex:1;padding:12px 14px;border-radius:12px;border:1px solid var(--border);
+      background:#fff;color:var(--text);font-weight:700;font-size:18px;letter-spacing:.08em;
+    }
+    .btn{
+      padding:10px 12px;border-radius:12px;border:1px solid var(--border);
+      background:var(--accent-weak);cursor:pointer;color:var(--accent);font-weight:700;
+      transition:transform .08s ease, box-shadow .12s ease, background .12s ease;
+    }
+    .btn:hover{transform:translateY(-1px); box-shadow:0 6px 14px rgba(37,99,235,.15)}
+    .btn:active{transform:translateY(0)}
+    .small{font-size:13px;color:var(--muted);margin-top:12px}
+    .reveal-all .btn{background:#fff}
+    @media (max-width:720px){.cards{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Password Display</h1>
+        <p class="lead">Simple single-file HTML/CSS/JS to show two passwords: YouTube and Telegram (in English).</p>
+      </div>
+      <div style="text-align:right">
+        <div class="small">Made for quick use</div>
+      </div>
+    </header>
+
+    <div class="cards">
+      <div class="card" id="card-youtube">
+        <div>
+          <div class="label">YouTube password</div>
+          <div class="pw-row">
+            <input class="pw" id="pw-youtube" type="password" value="6545" readonly />
+            <button class="btn" data-action="toggle" data-target="pw-youtube">Show</button>
+            <button class="btn" data-action="copy" data-target="pw-youtube">Copy</button>
+          </div>
+        </div>
+        <div class="small">Tip: Click <strong>Show</strong> to reveal, <strong>Copy</strong> to copy to clipboard.</div>
+      </div>
+
+      <div class="card" id="card-telegram">
+        <div>
+          <div class="label">Telegram password</div>
+          <div class="pw-row">
+            <input class="pw" id="pw-telegram" type="password" value="5412" readonly />
+            <button class="btn" data-action="toggle" data-target="pw-telegram">Show</button>
+            <button class="btn" data-action="copy" data-target="pw-telegram">Copy</button>
+          </div>
+        </div>
+        <div class="small">You can change the values by editing the <code>value</code> attribute in the HTML file.</div>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;margin-top:18px">
+      <label style="color:var(--muted);font-size:14px">Reveal all</label>
+      <div class="reveal-all" style="margin-left:12px">
+        <button class="btn" id="revealAll">Show All</button>
+      </div>
+      <div style="margin-left:auto;color:var(--muted);font-size:13px">Made: Single file • Open in browser</div>
+    </div>
+  </div>
+
+  <script>
+    function toggleInput(id, btn){
+      const inp = document.getElementById(id);
+      if(!inp) return;
+      if(inp.type === 'password'){
+        inp.type = 'text';
+        btn.textContent = 'Hide';
+      } else {
+        inp.type = 'password';
+        btn.textContent = 'Show';
+      }
+    }
+
+    function copyInput(id, btn){
+      const inp = document.getElementById(id);
+      if(!inp) return;
+      // temporarily enable selection
+      const val = inp.value;
+      navigator.clipboard.writeText(val).then(()=>{
+        const old = btn.textContent;
+        btn.textContent = 'Copied';
+        setTimeout(()=> btn.textContent = old, 900);
+      }).catch(()=>{
+        // fallback
+        const old = btn.textContent;
+        btn.textContent = 'Failed';
+        setTimeout(()=> btn.textContent = old, 900);
+      });
+    }
+
+    document.addEventListener('click', function(e){
+      const btn = e.target.closest('button[data-action]');
+      if(!btn) return;
+      const action = btn.getAttribute('data-action');
+      const target = btn.getAttribute('data-target');
+      if(action === 'toggle') toggleInput(target, btn);
+      if(action === 'copy') copyInput(target, btn);
+    });
+
+    const revealBtn = document.getElementById('revealAll');
+    let allShown = false;
+    revealBtn.addEventListener('click', function(){
+      const a = document.querySelectorAll('.pw');
+      allShown = !allShown;
+      a.forEach(el=> el.type = allShown ? 'text' : 'password');
+      revealBtn.textContent = allShown ? 'Hide All' : 'Show All';
+      // update individual show buttons text
+      document.querySelectorAll('button[data-action="toggle"]').forEach(b=> b.textContent = allShown ? 'Hide' : 'Show');
+    });
+  </script>
+</body>
+</html>
