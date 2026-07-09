@@ -56,7 +56,7 @@ Chat_Leave = False
 key = None
 iv = None
 region = None
-server2 = "bd"
+server2 = "ME"
 key2 = "YOUR_API_KEY"
 BYPASS_TOKEN = "YOUR_BYPASS_TOKEN"
 
@@ -500,7 +500,7 @@ async def MaiiiinE():
     global LOOP, key, iv, region, whisper_writer, online_writer, LoGinDaTaUncRypTinG
     LOOP = asyncio.get_running_loop()
 
-    Uid, Pw = '4227515098', '0A184A64050986E09144E28F0EF9D4C25C31CF5A96ED5069DD2D795CC2FE84DA'
+    Uid, Pw = '5529498938', 'SulavXKawar_XMZS'
     open_id, access_token = await GeNeRaTeAccEss(Uid, Pw)
     if not open_id or not access_token: print("Invalid account"); return None
     PyL = await EncRypTMajoRLoGin(open_id, access_token)
